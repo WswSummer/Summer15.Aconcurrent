@@ -1,16 +1,16 @@
 package com.wsw.concurrent.thread;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.Date;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @Author WangSongWen
  * @Date: Created in 10:38 2020/12/24
  * @Description: 线程池
  */
+@Slf4j
 public class MyThreadPool {
     // FixedThreadPool---创建一个固定大小的线程池，可控制并发的线程数，超出的线程会在队列中等待
     public static void fixedThreadPool() {
@@ -32,7 +32,7 @@ public class MyThreadPool {
 
         for (int i = 0; i < 4; i++) {
             threadPool.submit(() -> {
-                System.out.println("任务被执行,线程: " + Thread.currentThread().getName());
+                log.info("任务被执行,线程: " + Thread.currentThread().getName());
             });
         }
     }
@@ -43,7 +43,7 @@ public class MyThreadPool {
 
         for (int i = 0; i < 10; i++) {
             threadPool.execute(() -> {
-                System.out.println("任务被执行,线程: " + Thread.currentThread().getName());
+                log.info("任务被执行,线程: " + Thread.currentThread().getName());
                 try {
                     TimeUnit.SECONDS.sleep(1);
                 } catch (InterruptedException e) {
@@ -60,7 +60,7 @@ public class MyThreadPool {
         for (int i = 0; i < 10; i++) {
             final int index = i;
             threadPool.execute(() -> {
-                System.out.println(index + " 任务被执行");
+                log.info(index + " 任务被执行");
                 try {
                     TimeUnit.SECONDS.sleep(1);
                 } catch (InterruptedException e) {
@@ -72,22 +72,74 @@ public class MyThreadPool {
 
     // ScheduledThreadPool---创建一个可以执行延迟任务的线程池
     public static void scheduledThreadPool() {
-//        ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(5);
-//
-//        System.out.println("添加任务,时间: " + new Date());
-//        threadPool.schedule(() -> {
-//            System.out.println("任务被执行,时间: " + new Date());
-//                try {
-//                    TimeUnit.SECONDS.sleep(1);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//        });
+        ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(5);
+
+        log.info("添加任务,时间: " + new Date());
+        threadPool.schedule(() -> {
+            log.info("任务被执行,时间: " + new Date());
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }, 2, TimeUnit.SECONDS);
+    }
+
+    // SingleThreadScheduledExecutor---创建一个单线程的可以执行延迟任务的线程池
+    public static void singleThreadScheduledExecutor() {
+        ScheduledExecutorService threadPool = Executors.newSingleThreadScheduledExecutor();
+
+        log.info("添加任务,时间: " + new Date());
+        threadPool.schedule(() -> {
+            log.info("任务被执行,时间: " + new Date());
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }, 2, TimeUnit.SECONDS);
+    }
+
+    // newWorkStealingPool---创建一个抢占式执行的线程池（任务执行顺序不确定），此方法只有在 JDK 1.8+ 版本中才能使用
+    public static void newWorkStealingPool() {
+        ExecutorService threadPool = Executors.newWorkStealingPool();
+
+        for (int i = 0; i < 10; i++) {
+            final int index = i;
+            threadPool.execute(() -> {
+                log.info(index + " 被执行,线程名: " + Thread.currentThread().getName());
+            });
+        }
+        // 确保任务执行完成
+        while (!threadPool.isTerminated()) {
+
+        }
+    }
+
+    // ThreadPoolExecutor---最原始的创建线程池的方式，它包含了 7 个参数可供设置
+    public static void threadPoolExecutor() {
+        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(5, 10, 100, TimeUnit.SECONDS, new LinkedBlockingDeque<>(10));
+
+        for (int i = 0; i < 10; i++) {
+            final int index = i;
+            threadPool.execute(() -> {
+                log.info(index + " 被执行,线程名: " + Thread.currentThread().getName());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
     }
 
     public static void main(String[] args) {
         //MyThreadPool.fixedThreadPool();
         //MyThreadPool.cachedThreadPool();
-        MyThreadPool.singleThreadExecutor();
+        //MyThreadPool.singleThreadExecutor();
+        //MyThreadPool.scheduledThreadPool();
+        //MyThreadPool.singleThreadScheduledExecutor();
+        //MyThreadPool.newWorkStealingPool();
+        MyThreadPool.threadPoolExecutor();
     }
 }
