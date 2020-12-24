@@ -133,6 +133,35 @@ public class MyThreadPool {
         }
     }
 
+    public static void MyThreadPoolExecutor() {
+        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(
+                1,
+                1,
+                100,
+                TimeUnit.SECONDS,
+                new LinkedBlockingDeque<>(1),
+                new ThreadPoolExecutor.AbortPolicy()  // 拒绝策略
+                // 自定义拒绝策略
+//                new RejectedExecutionHandler() {
+//                    @Override
+//                    public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+//
+//                    }
+//                }
+                );
+
+        for (int i = 0; i < 4; i++) {
+            threadPool.execute(() -> {
+                log.info("当前任务被执行,时间: " + new Date() + " 执行线程: " + Thread.currentThread().getName());
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+    }
+
     public static void main(String[] args) {
         //MyThreadPool.fixedThreadPool();
         //MyThreadPool.cachedThreadPool();
@@ -140,6 +169,7 @@ public class MyThreadPool {
         //MyThreadPool.scheduledThreadPool();
         //MyThreadPool.singleThreadScheduledExecutor();
         //MyThreadPool.newWorkStealingPool();
-        MyThreadPool.threadPoolExecutor();
+        //MyThreadPool.threadPoolExecutor();
+        MyThreadPool.MyThreadPoolExecutor();
     }
 }
