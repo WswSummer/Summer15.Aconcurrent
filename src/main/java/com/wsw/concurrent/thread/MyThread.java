@@ -7,6 +7,13 @@ import java.text.SimpleDateFormat;
  * @Author WangSongWen
  * @Date: Created in 14:28 2020/12/28
  * @Description: ThreadLocal
+ * <p>
+ * get()方法是用来获取ThreadLocal在当前线程中保存的变量副本
+ * set()用来设置当前线程中变量的副本
+ * remove()用来移除当前线程中变量的副本
+ * initialValue()是一个protected方法,一般是用来在使用时进行重写
+ * <p>
+ * 在进行get之前,必须先set,否则会报空指针异常,如果想在get之前不需要调用set就能正常访问的话,必须重写initialValue()方法
  */
 public class MyThread {
     private static final ThreadLocal<DateFormat> DATE_FORMAT_THREAD_LOCAL = new ThreadLocal<DateFormat>() {
@@ -50,14 +57,11 @@ public class MyThread {
         System.out.println(myThread.getLong());
         System.out.println(myThread.getString());
 
-        Thread thread = new Thread(){
-            @Override
-            public void run() {
-                myThread.set();
-                System.out.println(myThread.getLong());
-                System.out.println(myThread.getString());
-            }
-        };
+        Thread thread = new Thread(() -> {
+            myThread.set();
+            System.out.println(myThread.getLong());
+            System.out.println(myThread.getString());
+        });
         thread.start();
         thread.join();
 
