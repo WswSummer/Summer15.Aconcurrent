@@ -35,6 +35,7 @@ public class MyThreadPool {
                 log.info("任务被执行,线程: " + Thread.currentThread().getName());
             });
         }
+        threadPool.shutdown();
     }
 
     // CachedThreadPool---创建一个可缓存的线程池，若线程数超过处理所需，缓存一段时间后会回收，若线程数不够，则新建线程
@@ -51,6 +52,7 @@ public class MyThreadPool {
                 }
             });
         }
+        threadPool.shutdown();
     }
 
     // SingleThreadExecutor---创建单个线程数的线程池，它可以保证先进先出的执行顺序
@@ -68,6 +70,7 @@ public class MyThreadPool {
                 }
             });
         }
+        threadPool.shutdown();
     }
 
     // ScheduledThreadPool---创建一个可以执行延迟任务的线程池
@@ -83,6 +86,8 @@ public class MyThreadPool {
                 e.printStackTrace();
             }
         }, 2, TimeUnit.SECONDS);
+
+        threadPool.shutdown();
     }
 
     // SingleThreadScheduledExecutor---创建一个单线程的可以执行延迟任务的线程池
@@ -98,6 +103,8 @@ public class MyThreadPool {
                 e.printStackTrace();
             }
         }, 2, TimeUnit.SECONDS);
+
+        threadPool.shutdown();
     }
 
     // newWorkStealingPool---创建一个抢占式执行的线程池（任务执行顺序不确定），此方法只有在 JDK 1.8+ 版本中才能使用
@@ -114,6 +121,7 @@ public class MyThreadPool {
         while (!threadPool.isTerminated()) {
 
         }
+        threadPool.shutdown();
     }
 
     // ThreadPoolExecutor---最原始的创建线程池的方式，它包含了 7 个参数可供设置
@@ -131,6 +139,7 @@ public class MyThreadPool {
                 }
             });
         }
+        threadPool.shutdown();
     }
 
     public static void MyThreadPoolExecutor() {
@@ -160,6 +169,7 @@ public class MyThreadPool {
                 }
             });
         }
+        threadPool.shutdown();
     }
 
     public static void main(String[] args) {
