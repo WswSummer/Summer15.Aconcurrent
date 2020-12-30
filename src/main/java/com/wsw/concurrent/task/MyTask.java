@@ -9,9 +9,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @Date: Created in 13:17 2020/12/25
  * @Description: 自定义线程池
  */
-public class MyTask implements Task {
+public class MyTask {
 
-    @Override
     public void execute() {
         int corePoolSize = 2;
         int maximumPoolSize = 4;
@@ -71,11 +70,4 @@ public class MyTask implements Task {
         MyTask task = new MyTask();
         task.execute();
     }
-    /*
-        1，由于线程预启动，首先创建了1，2号线程，然后task1，task2被执行
-        2，但任务提交没有结束，此时任务task3，task6到达发现核心线程已经满了，进入等待队列；
-        3，等待队列满后创建任务线程3，4执行任务task3，task6，同时task4，task5进入队列；
-        4，此时创建线程数（4）等于最大线程数，且队列已满，所以7，8，9，10任务被拒绝；
-        5，任务执行完毕后回头来执行task4，task5，队列清空。
-     */
 }
