@@ -14,15 +14,17 @@ import java.util.Date;
  */
 @Component
 public class MySchedule {
-    @Async("executor1")
-    @Scheduled(cron = "0/1 * * * * ?")
+    @Async("wswExecutor")
+    //@Scheduled(cron = "0/1 * * * * ?")
     public void threadSchedule1() {
-        System.out.println("定时任务1开始: " + new Date());
+        for (int i = 1; i <= 10; i++) {
+            System.out.println("定时任务1开始: " + new Date());
+        }
     }
 
-    @Async("executor2")
-    @Scheduled(cron = "0/1 * * * * ?")
-    public void threadSchedule2() {
-        System.out.println("定时任务2开始: " + new Date());
-    }
+//    @Async("executor2")
+//    @Scheduled(cron = "0/1 * * * * ?")
+//    public void threadSchedule2() {
+//        System.out.println("定时任务2开始: " + new Date());
+//    }
 }
