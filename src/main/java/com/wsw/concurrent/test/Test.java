@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  */
 public class Test {
     public static void main(String[] args) {
-        String string = "-1530900000000+44700000000/-3100000000+-138700000000*-62600000000--1186200000000+77100000000";
+        String string = "-1530900000000+44700000000/-3100000000+-138700000000*-62600000000--1186200000000--77100000000";
         List<String> result = expr2Infix(string);
         System.out.println(result);
     }
@@ -23,22 +23,22 @@ public class Test {
         Pattern pattern_expr = Pattern.compile("(\\(|\\)|\\+|\\-|\\*|/|\\d+(\\.\\d+)?)");
         Matcher matcher = pattern_expr.matcher(expr);
         List<String> exprs = new ArrayList<>();
-        while(matcher.find()) {
+        while (matcher.find()) {
             exprs.add(matcher.group(1));
         }
         List<String> newExprs = new ArrayList<>();
         for (int i = 0; i < exprs.size(); i++) {
             String now = exprs.get(i);
             if (i == 0 && now.equals("-")) {
-                String next = exprs.get(i+1);
+                String next = exprs.get(i + 1);
                 newExprs.add(now + next);
                 i++;
-            }else if (i != exprs.size()-1 && now.equals("-") && (exprs.get(i-1).equals("") || exprs.get(i-1).equals("+")
-                    || exprs.get(i-1).equals("-") || exprs.get(i-1).equals("*") || exprs.get(i-1).equals("/"))) {
-                String next = exprs.get(i+1);
+            } else if (now.equals("-") && (exprs.get(i - 1).equals("+") || exprs.get(i - 1).equals("-")
+                    || exprs.get(i - 1).equals("*") || exprs.get(i - 1).equals("/"))) {
+                String next = exprs.get(i + 1);
                 newExprs.add(now + next);
                 i++;
-            }else {
+            } else {
                 newExprs.add(now);
             }
         }
