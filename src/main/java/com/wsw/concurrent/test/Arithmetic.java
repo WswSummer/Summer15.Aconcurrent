@@ -153,27 +153,5 @@ public class Arithmetic {
         Arithmetic arithmetic = new Arithmetic();
         String result = arithmetic.arithmeticContinuous(new String[]{"+", "-", "*", "/"}, "1", "-2", "-3", "-4", "-2");
         System.out.println(result);
-        /*List<String> expression = new ArrayList<>();
-        expression.add("1");
-        expression.add("-2");
-        expression.add("+");
-        expression.add("-3");
-        expression.add("-");
-        expression.add("-4");
-        expression.add("*");
-        expression.add("-2");
-        expression.add("/");
-        String result = arithmetic.arithmetic(expression);*/
-        /*List<String> expression = new ArrayList<>();
-        expression.add("1");
-        expression.add("+");
-        expression.add("-2");
-        expression.add("-");
-        expression.add("-3");
-        expression.add("*");
-        expression.add("-4");
-        expression.add("/");
-        expression.add("-2");
-        List<String> result = arithmetic.convert(expression);*/
     }
 }
