@@ -1,4 +1,4 @@
-package com.wsw.concurrent.test;
+package com.wsw.concurrent.other;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;

@@ -1,4 +1,4 @@
-package com.wsw.concurrent.test;
+package com.wsw.concurrent.other;
 
 import java.util.ArrayList;
 import java.util.List;

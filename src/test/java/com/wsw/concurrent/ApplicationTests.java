@@ -1,6 +1,8 @@
 package com.wsw.concurrent;
 
+import com.wsw.concurrent.service.ReflexServiceImpl;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.text.SimpleDateFormat;
@@ -8,8 +10,8 @@ import java.text.SimpleDateFormat;
 @SpringBootTest
 class ApplicationTests {
 
-    public boolean isTimeFormatCorrect(String time, String pattern) throws Exception{
-        if(time == null || pattern == null) {
+    public boolean isTimeFormatCorrect(String time, String pattern) throws Exception {
+        if (time == null || pattern == null) {
             return false;
         }
 
@@ -35,4 +37,12 @@ class ApplicationTests {
         }
     }
 
+    @Autowired
+    private ReflexServiceImpl reflexService;
+
+    @Test
+    void reflexTest() {
+        String result = reflexService.toString("1", "2");
+        System.out.println(result);
+    }
 }
