@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
  * <p>
  * 在进行get之前,必须先set,否则会报空指针异常,如果想在get之前不需要调用set就能正常访问的话,必须重写initialValue()方法
  */
-public class MyThread {
+public class MyThreadLocal {
     private static final ThreadLocal<DateFormat> DATE_FORMAT_THREAD_LOCAL = new ThreadLocal<DateFormat>() {
         @Override
         protected DateFormat initialValue() {
@@ -52,7 +52,7 @@ public class MyThread {
 
     public static void main(String[] args) throws InterruptedException {
         //System.out.println(DATE_FORMAT_THREAD_LOCAL.get().format(System.currentTimeMillis()));
-        final MyThread myThread = new MyThread();
+        final MyThreadLocal myThread = new MyThreadLocal();
         myThread.set();
         System.out.println(myThread.getLong());
         System.out.println(myThread.getString());
