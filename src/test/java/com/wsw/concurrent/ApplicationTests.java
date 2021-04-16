@@ -1,10 +1,12 @@
 package com.wsw.concurrent;
 
+import com.wsw.concurrent.DesignPattern.Adapter.FileService;
 import com.wsw.concurrent.service.ReflexServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 
 @SpringBootTest
@@ -44,5 +46,14 @@ class ApplicationTests {
     void reflexTest() {
         String result = reflexService.toString("1", "2");
         System.out.println(result);
+    }
+
+    @Resource
+    private FileService fileService;
+
+    @Test
+    void fileTest() {
+        fileService.uploadFile("wsw-upload");
+        fileService.downloadFile("wsw-download");
     }
 }
