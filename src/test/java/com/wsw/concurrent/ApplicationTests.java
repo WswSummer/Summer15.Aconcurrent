@@ -1,6 +1,7 @@
 package com.wsw.concurrent;
 
 import com.wsw.concurrent.DesignPattern.Adapter.FileService;
+import com.wsw.concurrent.pdf.PdfFileConvert;
 import com.wsw.concurrent.service.ReflexServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +56,13 @@ class ApplicationTests {
     void fileTest() {
         fileService.uploadFile("wsw-upload");
         fileService.downloadFile("wsw-download");
+    }
+
+    @Autowired
+    private PdfFileConvert pdfFileConvert;
+
+    @Test
+    void pdfTest() {
+        System.out.println(pdfFileConvert.load());
     }
 }
