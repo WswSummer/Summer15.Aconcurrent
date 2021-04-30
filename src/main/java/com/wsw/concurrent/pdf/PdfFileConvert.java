@@ -23,7 +23,7 @@ public class PdfFileConvert {
         PDFTextStripper stripper;
         String text = null;
         try {
-            pdDocument = PDDocument.load(new File("C:\\Users\\wangsongwen\\Desktop\\易方达消费行业股票型证券投资基金2020年第四季度报告.pdf"));
+            pdDocument = PDDocument.load(new File("C:\\Users\\wangsongwen\\Desktop\\海富通上证5年期地方政府债交易型开放式指数证券投资基金2021年第1季度报告.pdf"));
             stripper = new PDFTextStripper();
             stripper.setSortByPosition(true);
             text = stripper.getText(pdDocument).trim();
@@ -38,10 +38,10 @@ public class PdfFileConvert {
                 e.printStackTrace();
             }
         }
-        System.out.println(text);
+        /*System.out.println(text);
         System.out.println("------------------------------------------------------------------------------------------------------");
         System.out.println("------------------------------------------------------------------------------------------------------");
-        System.out.println("------------------------------------------------------------------------------------------------------");
+        System.out.println("------------------------------------------------------------------------------------------------------");*/
         return format(text);
     }
 
@@ -66,13 +66,15 @@ public class PdfFileConvert {
                 continue;
             }
 //			页眉统计
+            Pattern p1 = Pattern.compile("[123456789][\\d]{0,2}");
+            Matcher m1 = p1.matcher(temp);
             if (!"".equals(tempStr) && temp.equals(tempStr)) {
                 pageUp++;
-            } else if ("".equals(tempStr) && (isPageNumber(temp) || temp.matches("[123456789][\\d]{0,2}"))) {
-                tempStr = buffer.trim();
+            } else if ("".equals(tempStr) && (isPageNumber(temp) || m1.find())) {
+                tempStr = temp.trim();
             }
 //			去除页号
-            if (isPageNumber(temp) || (temp.matches("[123456789][\\d]{0,2}") && String.valueOf(pageDown).equals(temp))) {
+            if (isPageNumber(temp) || (m1.find() && String.valueOf(pageDown).equals(temp))) {
                 pageDown++;
                 continue;//存在一定风险
             }
@@ -158,7 +160,7 @@ public class PdfFileConvert {
         if (link.endsWith("，")) {
             return false;
         }
-        Pattern p2 = Pattern.compile("[<(（第]?[1234567890一二三四五六七八九十ABCDEF]{1,3}[>)、）.节章条]?");
+        Pattern p2 = Pattern.compile("[<(（第]+[1234567890一二三四五六七八九十ABCDEF]{1,3}[>)、）.节章条]?");
         if (link.length() > 4) {
             link = link.substring(0, 4);
         }
