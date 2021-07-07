@@ -23,7 +23,9 @@ public class PdfFileConvert {
         PDFTextStripper stripper;
         String text = null;
         try {
-            pdDocument = PDDocument.load(new File("C:\\Users\\wangsongwen\\Desktop\\海富通上证5年期地方政府债交易型开放式指数证券投资基金2021年第1季度报告.pdf"));
+            //pdDocument = PDDocument.load(new File("C:\\Users\\wangsongwen\\Desktop\\广东松炀再生资源股份有限公司2019年年度报告（更正版）.pdf"));
+            pdDocument = PDDocument.load(new File("C:\\Users\\wangsongwen\\Desktop\\中加心享灵活配置混合型证券投资基金托管协议(更新).pdf"));
+            //pdDocument = PDDocument.load(new File("C:\\Users\\wangsongwen\\Desktop\\贵广网络2020年第一季度报告（更新后）.pdf"));
             stripper = new PDFTextStripper();
             stripper.setSortByPosition(true);
             text = stripper.getText(pdDocument).trim();
@@ -52,39 +54,46 @@ public class PdfFileConvert {
         String spilter = System.getProperty("line.separator");
         String blank = "    ";
         StringBuilder textStrBuffer = new StringBuilder();
-        content = StringReplaceUtil.replaceSpecialCharacters(content);
         content = StringUtils.replaceEach(content, new String[]{"[　 ]", "\\?", ","}, new String[]{"", "", ""});
         content = StringReplaceUtil.replaceUTFSpace(content);
+        content = StringReplaceUtil.replaceSpecialCharacters(content);
         String[] strelines = content.trim().split(spilter);
         String buffer = blank;
         String tempStr = "";
-        int pageUp = 1;//页面个数
-        int pageDown = 1;//页脚个数
+        int pageUp = 1;// 页面个数
+        int pageDown = 1;// 页脚个数
         for (int i = 0; i < strelines.length; i++) {
             String temp = strelines[i].trim().replaceAll("[ ]+", " ");
             if (temp.length() <= 0) {
                 continue;
             }
-//			页眉统计
+            // 目录中省略号与横线过多导致文本解析不美观
+            // 现在限制目录的长度为55，后面可按需调整
+            if ((temp.contains("..........") || temp.contains("----------")) && temp.length() >= 55) {
+                temp = temp.substring(0, 50) + temp.substring(temp.length() - 5);
+            }
+            // 页眉统计
             Pattern p1 = Pattern.compile("[123456789][\\d]{0,2}");
             Matcher m1 = p1.matcher(temp);
+            Pattern p6 = Pattern.compile("[一二三四五六七八九十]+[、]+");
+            Matcher m6 = p6.matcher(temp);
             if (!"".equals(tempStr) && temp.equals(tempStr)) {
                 pageUp++;
             } else if ("".equals(tempStr) && (isPageNumber(temp) || m1.find())) {
                 tempStr = temp.trim();
             }
-//			去除页号
+            // 去除页号
             if (isPageNumber(temp) || (m1.find() && String.valueOf(pageDown).equals(temp))) {
                 pageDown++;
-                continue;//存在一定风险
+                continue;// 存在一定风险
             }
-            int one = temp.indexOf("，");//逗号
+            int one = temp.indexOf("，");// 逗号
             String t4 = buffer.trim();
             if (i > 4 && !(StringUtils.endsWithAny(t4, new String[]{"。", "：", "；", "！"}))) {
-//				判断上一行是否结束
+                // 判断上一行是否结束
                 Pattern p2 = Pattern.compile("^[\u4e00-\u9fa5。；0-9]+$");// 针对标题、短句被硬性换行符分隔的情况
                 Matcher m2 = p2.matcher(temp);
-//				日期被分隔判断
+                // 日期被分隔判断
                 Pattern p3 = Pattern.compile("^[年月日]");
                 Matcher m3 = p3.matcher(temp);
                 Pattern p4 = Pattern.compile("\\d$");
@@ -103,15 +112,16 @@ public class PdfFileConvert {
                         || (temp.indexOf("；") >= 0 && temp.indexOf("；") < 3)) {
                     buffer = buffer.split(spilter)[0];
                 }
-//				本行是标题，上行一定要有换行符
-                if (isKeywords(temp)) {
+                // 本行是标题，上行一定要有换行符
+                if (isKeywords(temp) || temp.equals("目 录") || temp.equals("目录")) {
                     if (!buffer.endsWith(spilter + blank)) {
                         buffer = buffer + spilter + blank;
                     }
                 }
             }
             textStrBuffer.append(buffer);
-            if (isKeywords(temp)) {// 该行为标题行
+            // 该行为标题行
+            if (isKeywords(temp)) {
                 if (temp.indexOf("）", 3) < temp.indexOf("（", 3)
                         || temp.indexOf("》") < temp.indexOf("《")
                         || temp.indexOf("”") < temp.indexOf("“")
@@ -126,12 +136,14 @@ public class PdfFileConvert {
                         || temp.indexOf("）") < temp.indexOf("（")) {
                     buffer = temp;
                 } else if (temp.endsWith("。") || temp.endsWith("：")
-                        || temp.endsWith("；") || t4.endsWith("！")) {
+                        || temp.endsWith("；") || t4.endsWith("！")
+                        || m6.find()) {
                     buffer = temp + spilter + blank;
                 } else if ((temp.indexOf("。") >= 0 && !temp.endsWith("。"))
                         || (one > 0 && !temp.substring(one - 1, one).matches("[\\d]"))
-                        || temp.indexOf("、") >= 0
-                        || temp.endsWith(".")) {
+                        || (temp.indexOf("、") >= 0 && !(temp.contains("........") || temp.contains("--------")))
+                        || temp.endsWith(".")
+                        || (temp.contains("：") && !temp.endsWith("。"))) {
                     buffer = temp;
                 } else {
                     buffer = temp + spilter + blank;
@@ -140,8 +152,8 @@ public class PdfFileConvert {
         }
         textStrBuffer.append(buffer);
         if (pageUp > 4) {
-//			去除页眉页脚
-            //匹配符号* ( ) 转义
+            // 去除页眉页脚
+            // 匹配符号* ( ) 转义
             tempStr = StringUtils.replaceEach(tempStr, new String[]{"\\*", "\\(", "(", "\\)", ")", "\\[", "[", "\\]", "]", "\\{", "{", "\\}", "}"}, new String[]{"\\\\*", "\\\\(", "\\(", "\\\\)", "\\)", "\\\\[", "\\[", "\\\\]", "\\]", "\\\\{", "\\{", "\\\\}", "\\}"});
             return textStrBuffer.toString().replaceAll(tempStr + "[\\s]*(\\r\\n)?", "").replaceAll(spilter + spilter, spilter).replaceAll("    " + spilter, "").replaceAll("        ", "    ");
         } else {
@@ -150,7 +162,7 @@ public class PdfFileConvert {
     }
 
     private boolean isKeywords(String link) {
-//		以下：存在下列情况时，忽略关键字匹配
+        // 以下：存在下列情况时，忽略关键字匹配
         if (link.indexOf("）") < link.indexOf("（")) {
             return false;
         }
