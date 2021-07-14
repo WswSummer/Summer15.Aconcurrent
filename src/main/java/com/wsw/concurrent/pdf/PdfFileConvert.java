@@ -24,8 +24,9 @@ public class PdfFileConvert {
         String text = null;
         try {
             //pdDocument = PDDocument.load(new File("C:\\Users\\wangsongwen\\Desktop\\广东松炀再生资源股份有限公司2019年年度报告（更正版）.pdf"));
-            pdDocument = PDDocument.load(new File("C:\\Users\\wangsongwen\\Desktop\\中加心享灵活配置混合型证券投资基金托管协议(更新).pdf"));
+            //pdDocument = PDDocument.load(new File("C:\\Users\\wangsongwen\\Desktop\\中加心享灵活配置混合型证券投资基金托管协议(更新).pdf"));
             //pdDocument = PDDocument.load(new File("C:\\Users\\wangsongwen\\Desktop\\贵广网络2020年第一季度报告（更新后）.pdf"));
+            pdDocument = PDDocument.load(new File("C:\\Users\\wangsongwen\\Desktop\\易方达中证医疗交易型开放式指数证券投资基金上市交易公告书.pdf"));
             stripper = new PDFTextStripper();
             stripper.setSortByPosition(true);
             text = stripper.getText(pdDocument).trim();
@@ -137,7 +138,7 @@ public class PdfFileConvert {
                     buffer = temp;
                 } else if (temp.endsWith("。") || temp.endsWith("：")
                         || temp.endsWith("；") || t4.endsWith("！")
-                        || m6.find()) {
+                        || m6.find() || temp.startsWith("附件")) {
                     buffer = temp + spilter + blank;
                 } else if ((temp.indexOf("。") >= 0 && !temp.endsWith("。"))
                         || (one > 0 && !temp.substring(one - 1, one).matches("[\\d]"))
