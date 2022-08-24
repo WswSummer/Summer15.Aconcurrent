@@ -1,4 +1,4 @@
-package com.wsw.concurrent.json;
+package com.wsw.concurrent.lamda.json;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
