@@ -94,8 +94,9 @@ public class RabbitConfig {
         factory.setBatchSize(30);
         //手动确认
         factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
-        factory.setConcurrentConsumers(3);
+        factory.setConcurrentConsumers(5);
         factory.setMaxConcurrentConsumers(10);
+        factory.setPrefetchCount(200);
         return factory;
     }
 }

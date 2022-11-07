@@ -29,9 +29,9 @@ public class RabbitProvider implements RabbitTemplate.ConfirmCallback, RabbitTem
 
     @Override
     public void confirm(CorrelationData correlationData, boolean ack, String cause) {
-        log.info("消息ID: " + (correlationData != null ? correlationData.getId() : null));
+        //log.info("消息ID: " + (correlationData != null ? correlationData.getId() : null));
         if (ack) {
-            log.info("消息发送到exchange成功: correlationData:{}", correlationData);
+            //log.info("消息发送到exchange成功: correlationData:{}", correlationData);
         } else {
             log.error("消息发送到exchange失败: correlationData:{}, cause:{}", correlationData, cause);
         }

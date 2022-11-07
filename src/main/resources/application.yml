@@ -20,5 +20,8 @@ spring:
     listener:
       simple:
         acknowledge-mode: manual
+        concurrency: 3
+        max-concurrency: 5
+        prefetch: 150
     template:
       mandatory: true
