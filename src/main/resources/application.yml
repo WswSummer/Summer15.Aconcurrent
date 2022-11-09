@@ -10,9 +10,9 @@ fdfs:
 
 spring:
   rabbitmq:
-    addresses:
-    username: admin
-    password: adminmq
+    addresses: 127.0.0.1:5672,127.0.0.1:5673,127.0.0.1:5674
+    username: guest
+    password: guest
     virtual-host: /
     publisher-confirm-type: correlated
     publisher-returns: true
